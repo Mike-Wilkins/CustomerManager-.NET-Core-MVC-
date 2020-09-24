@@ -26,7 +26,9 @@ namespace CustomerManager.Models
 
         [Required]
         [DisplayName("Phone Number")]
-        public int PhoneNumber { get; set; }
+        [RegularExpression(@"^\s*(([+]\s?\d[-\s]?\d|0)?\s?\d([-\s]?\d){9}|[(]\s?\d([-\s]?\d)+\s*[)]([-\s]?\d)+)\s*$", ErrorMessage ="Phone number not recognised")]
+       
+        public string PhoneNumber { get; set; }
 
         [Required]
         public string Address { get; set; }
@@ -35,6 +37,7 @@ namespace CustomerManager.Models
         [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage ="Email not recognised")]
         public string Email { get; set; }
 
+        [DisplayName("Date Updated")]
         public string DateCreated { get; set; }
     }
 }

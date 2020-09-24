@@ -100,13 +100,14 @@ namespace CustomerManager.Controllers
         //POST: Delete
         [HttpPost]
         [ActionName("Delete")]
-        public IActionResult DeleteCustomer(int id)
+        public IActionResult DeleteCustomer(int id, int? page)
         {
             var result = _db.Customers.Where(m => m.Id == id).FirstOrDefault();
             _db.Customers.Remove(result);
             _db.SaveChanges();
 
-            var collectionList = _db.Customers.OrderBy(m => m.Id).ToList();
+            var pageNumber = page ?? 1;
+            var collectionList = _db.Customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
             return View("Index", collectionList);
         }
 
