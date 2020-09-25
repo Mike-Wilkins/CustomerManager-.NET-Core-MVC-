@@ -8,7 +8,9 @@ using X.PagedList;
 namespace CustomerManager.Controllers
 {
     public class CustomerController : Controller
+
     {
+        
         private ApplicationDbContext _db;
 
         public CustomerController(ApplicationDbContext db)

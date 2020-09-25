@@ -1,14 +1,8 @@
-﻿@*@model IEnumerable<CustomerManager.Models.Customer>*@
-
-
+﻿
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @using X.PagedList.Mvc.Core.Common;
 
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 
 @model IPagedList<CustomerManager.Models.Customer>
@@ -19,7 +13,7 @@
 }
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New Customer</a>
+    <a asp-action="Create" class="btn btn-success">Create New Customer</a>
 </p>
 <table class="table">
     <thead>
@@ -74,14 +68,13 @@
                     @Html.DisplayFor(modelItem => item.DateCreated)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-sm">Edit</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }
-       
+
     </tbody>
 </table>
 
-
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions() { Display=X.PagedList.Web.Common.PagedListDisplayMode.IfNeeded})
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions() { Display = X.PagedList.Web.Common.PagedListDisplayMode.IfNeeded })
