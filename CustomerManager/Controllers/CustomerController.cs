@@ -1,8 +1,10 @@
 ﻿using CustomerManager.Models;
 using CustomerManager.Persistence;
+using CustomerManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using X.PagedList;
 
 namespace CustomerManager.Controllers
@@ -11,20 +13,20 @@ namespace CustomerManager.Controllers
 
     {
         
-        private ApplicationDbContext _db;
+        private IApplicationDbContext _db;
 
-        public CustomerController(ApplicationDbContext db)
+        public CustomerController(IApplicationDbContext db)
         {
             _db = db;
         }
 
         // GET: Index
-        public IActionResult Index(int? page)
+        public async Task<IActionResult> Index(int? page)
         {
 
             var pageNumber = page ?? 1;
 
-            var customerDetails = _db.Customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
+            var customerDetails = await _db.Customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
             return View(customerDetails);
         }
 
@@ -36,7 +38,7 @@ namespace CustomerManager.Controllers
 
         // POST: Create
         [HttpPost]
-        public IActionResult Create(Customer customer, int? page)
+        public async Task<IActionResult> Create(Customer customer, int? page)
         {
             if (!ModelState.IsValid)
             {
@@ -46,12 +48,13 @@ namespace CustomerManager.Controllers
             customer.DateCreated = DateTime.Now.ToShortDateString();
 
             _db.Customers.Add(customer);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             var pageNumber = page ?? 1;
-            var collectionList = _db.Customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
+           
+            var customerDetails = await _db.Customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
 
-            return View("Index", collectionList);
+            return View("Index", customerDetails);
         }
 
         // GET: Edit

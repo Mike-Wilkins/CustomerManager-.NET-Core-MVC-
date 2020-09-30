@@ -1,17 +1,15 @@
 ﻿using CustomerManager.Models;
+using CustomerManager.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CustomerManager.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
+
         public DbSet<Customer> Customers { get; set; }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options)
-            :base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
 
         }

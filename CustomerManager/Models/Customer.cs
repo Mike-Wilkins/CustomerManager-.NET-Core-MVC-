@@ -27,7 +27,6 @@ namespace CustomerManager.Models
         [Required]
         [DisplayName("Phone Number")]
         [RegularExpression(@"^\s*(([+]\s?\d[-\s]?\d|0)?\s?\d([-\s]?\d){9}|[(]\s?\d([-\s]?\d)+\s*[)]([-\s]?\d)+)\s*$", ErrorMessage ="Phone number not recognised")]
-       
         public string PhoneNumber { get; set; }
 
         [Required]
