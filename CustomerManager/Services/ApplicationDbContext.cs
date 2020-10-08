@@ -8,6 +8,8 @@ namespace CustomerManager.Persistence
     {
 
         public DbSet<Customer> Customers { get; set; }
+
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

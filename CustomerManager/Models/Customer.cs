@@ -34,6 +34,8 @@ namespace CustomerManager.Models
 
         [Required]
         [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage ="Email not recognised")]
+
+        //[RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z])(\]?)$", ErrorMessage = "Email not recognised")]
         public string Email { get; set; }
 
         [DisplayName("Date Updated")]

@@ -13,10 +13,9 @@ namespace CustomerManager.Services
          DbSet<Customer> Customers { get; set; }
         int SaveChanges();
 
-
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
 
-
+        
     }
 
 

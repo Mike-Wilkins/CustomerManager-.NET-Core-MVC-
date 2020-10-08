@@ -10,9 +10,7 @@ using X.PagedList;
 namespace CustomerManager.Controllers
 {
     public class CustomerController : Controller
-
     {
-        
         private IApplicationDbContext _db;
 
         public CustomerController(IApplicationDbContext db)
@@ -115,8 +113,5 @@ namespace CustomerManager.Controllers
             var collectionList = _db.Customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
             return View("Index", collectionList);
         }
-
-
-
     }
 }
