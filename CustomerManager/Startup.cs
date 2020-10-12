@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CustomerManager.Persistence;
+using CustomerManager.Repositories;
 using CustomerManager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,7 +28,9 @@ namespace CustomerManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(@"Data Source=.\SQLEXPRESS; Initial Catalog=CustomerDbCore; Integrated Security=True"));
-            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            //services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<ICustomerRepository, SQLCustomerRepository>();
 
 
             services.AddControllersWithViews();

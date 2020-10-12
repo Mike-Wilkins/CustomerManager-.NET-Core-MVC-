@@ -1,5 +1,6 @@
 ﻿using CustomerManager.Models;
 using CustomerManager.Persistence;
+using CustomerManager.Repositories;
 using CustomerManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,9 +12,9 @@ namespace CustomerManager.Controllers
 {
     public class CustomerController : Controller
     {
-        private IApplicationDbContext _db;
+        private ICustomerRepository _db;
 
-        public CustomerController(IApplicationDbContext db)
+        public CustomerController(ICustomerRepository db)
         {
             _db = db;
         }
@@ -23,8 +24,9 @@ namespace CustomerManager.Controllers
         {
 
             var pageNumber = page ?? 1;
+            var customers = _db.GetAllCustomers();
 
-            var customerDetails = await _db.Customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
+            var customerDetails = await customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
             return View(customerDetails);
         }
 
@@ -45,12 +47,10 @@ namespace CustomerManager.Controllers
 
             customer.DateCreated = DateTime.Now.ToShortDateString();
 
-            _db.Customers.Add(customer);
-            await _db.SaveChangesAsync();
-
+            _db.Add(customer);
             var pageNumber = page ?? 1;
-           
-            var customerDetails = await _db.Customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
+            var customers = _db.GetAllCustomers();
+            var customerDetails = await customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
 
             return View("Index", customerDetails);
         }
@@ -58,10 +58,10 @@ namespace CustomerManager.Controllers
         // GET: Edit
         public IActionResult Edit(int id)
         {
-            var result = _db.Customers.Where(m => m.Id == id).FirstOrDefault();
-
-            return View(result);
+            var customer = _db.GetCustomer(id);
+            return View(customer);
         }
+
         // POST: Edit
         [HttpPost]
         public IActionResult Edit(Customer customer, int? page)
@@ -70,8 +70,8 @@ namespace CustomerManager.Controllers
             {
                 return View(customer);
             }
-            _db.Customers.Remove(customer);
-            _db.SaveChanges();
+            
+            _db.Delete(customer.Id);
 
             var editedCustomerDetails = new Customer();
 
@@ -83,21 +83,21 @@ namespace CustomerManager.Controllers
             editedCustomerDetails.Email = customer.Email;
             editedCustomerDetails.DateCreated = DateTime.Now.ToShortDateString();
 
-            _db.Customers.Add(editedCustomerDetails);
-            _db.SaveChanges();
+            _db.Add(editedCustomerDetails);
 
             var pageNumber = page ?? 1;
-            var collectionList = _db.Customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
-
+            var customers = _db.GetAllCustomers();
+            var collectionList = customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
 
             return View("Index", collectionList);
         }
 
+
         //GET: Delete
         public IActionResult Delete(int id)
         {
-            var result = _db.Customers.Where(m => m.Id == id).FirstOrDefault();
-            return View(result);
+            var customer = _db.GetCustomer(id);
+            return View(customer);
         }
 
         //POST: Delete
@@ -105,12 +105,10 @@ namespace CustomerManager.Controllers
         [ActionName("Delete")]
         public IActionResult DeleteCustomer(int id, int? page)
         {
-            var result = _db.Customers.Where(m => m.Id == id).FirstOrDefault();
-            _db.Customers.Remove(result);
-            _db.SaveChanges();
-
+            _db.Delete(id);
+            var customers = _db.GetAllCustomers();
             var pageNumber = page ?? 1;
-            var collectionList = _db.Customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
+            var collectionList = customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
             return View("Index", collectionList);
         }
     }

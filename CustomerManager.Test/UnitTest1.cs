@@ -99,8 +99,7 @@ namespace CustomerManager.Test
             var result = service.Create(newCustomer, null).Result;
 
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<Customer>(
-                viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<Customer>(viewResult.ViewData.Model);
 
 
 
@@ -117,22 +116,54 @@ namespace CustomerManager.Test
             var service = new CustomerController(context.Object);
 
             var newCustomer = new Customer();
-            
+           
            
             // Act
             var result = await service.Create(newCustomer, null);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<StaticPagedList<Customer>>(
-                viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<StaticPagedList<Customer>>(viewResult.ViewData.Model);
 
             
             Assert.Equal(2, model.Count());
             Assert.Equal("Index", viewResult.ViewName);
             
-            
-
         }
+
+
+
+        [Fact]
+        public void Edit_Should_Return_Invalid_Model()
+        {
+            // Arrange
+            var context = CreateDbContext();
+
+            var service = new CustomerController(context.Object);
+            service.ModelState.AddModelError("Failed", "Failed");
+
+            var newCustomer = new Customer();
+            newCustomer.FirstName = "Paul";
+
+            // Act
+            var result = service.Edit(newCustomer, null);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<Customer>(viewResult.ViewData.Model);
+
+            // Assert
+            Assert.Equal("Paul", model.FirstName);
+           
+        }
+
+
+
+
+
+
+
+       
+
+
     }
 }
