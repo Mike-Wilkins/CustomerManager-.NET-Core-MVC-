@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CustomerManager.Repositories
 {
@@ -37,9 +38,9 @@ namespace CustomerManager.Repositories
             return customer;
         }
 
-        public IEnumerable<Customer> GetAllCustomers()
+        public IEnumerable<Customer> GetAllCustomers(int page)
         {
-            return _context.Customers;
+            return _context.Customers.OrderBy(m => m.Id).ToPagedList(page, 6);
         }
 
         public Customer GetCustomer(int id)
@@ -55,5 +56,10 @@ namespace CustomerManager.Repositories
             _context.SaveChanges();
             return customerChanges; 
         }
+
+        //public async Task<IEnumerable<Customer>> GetAllCustomers(int page)
+        //{
+        //    return await _context.Customers.OrderBy(m => m.Id).ToPagedListAsync(page, 6);
+        //}
     }
 }

@@ -20,17 +20,17 @@ namespace CustomerManager.Controllers
         }
 
         // GET: Index
-        public async Task<IActionResult> Index(int? page)
+        public IActionResult Index(int? page)
         {
 
             var pageNumber = page ?? 1;
-            var customers = _db.GetAllCustomers();
+            var customers = _db.GetAllCustomers(pageNumber);
 
-            var customerDetails = await customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
-            return View(customerDetails);
+            //var customerDetails = await customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
+            return View(customers);
         }
 
-        // GET: Create
+        //GET: Create
         public IActionResult Create()
         {
             return View();
@@ -49,7 +49,7 @@ namespace CustomerManager.Controllers
 
             _db.Add(customer);
             var pageNumber = page ?? 1;
-            var customers = _db.GetAllCustomers();
+            var customers = _db.GetAllCustomers(pageNumber);
             var customerDetails = await customers.OrderBy(m => m.Id).ToPagedListAsync(pageNumber, 6);
 
             return View("Index", customerDetails);
@@ -70,7 +70,7 @@ namespace CustomerManager.Controllers
             {
                 return View(customer);
             }
-            
+
             _db.Delete(customer.Id);
 
             var editedCustomerDetails = new Customer();
@@ -86,7 +86,7 @@ namespace CustomerManager.Controllers
             _db.Add(editedCustomerDetails);
 
             var pageNumber = page ?? 1;
-            var customers = _db.GetAllCustomers();
+            var customers = _db.GetAllCustomers(pageNumber);
             var collectionList = customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
 
             return View("Index", collectionList);
@@ -105,9 +105,10 @@ namespace CustomerManager.Controllers
         [ActionName("Delete")]
         public IActionResult DeleteCustomer(int id, int? page)
         {
-            _db.Delete(id);
-            var customers = _db.GetAllCustomers();
             var pageNumber = page ?? 1;
+            _db.Delete(id);
+            var customers = _db.GetAllCustomers(pageNumber);
+            
             var collectionList = customers.OrderBy(m => m.Id).ToList().ToPagedList(pageNumber, 6);
             return View("Index", collectionList);
         }
