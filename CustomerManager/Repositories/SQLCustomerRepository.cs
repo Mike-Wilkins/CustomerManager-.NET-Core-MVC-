@@ -51,6 +51,7 @@ namespace CustomerManager.Repositories
 
         public Customer Update(Customer customerChanges)
         {
+            customerChanges.DateCreated = DateTime.Now.ToLongDateString();
             var customer = _context.Customers.Attach(customerChanges);
             customer.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             _context.SaveChanges();

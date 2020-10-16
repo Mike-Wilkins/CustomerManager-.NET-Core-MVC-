@@ -71,19 +71,7 @@ namespace CustomerManager.Controllers
                 return View(customer);
             }
 
-            _db.Delete(customer.Id);
-
-            var editedCustomerDetails = new Customer();
-
-            editedCustomerDetails.FirstName = customer.FirstName;
-            editedCustomerDetails.MiddleName = customer.MiddleName;
-            editedCustomerDetails.LastName = customer.LastName;
-            editedCustomerDetails.PhoneNumber = customer.PhoneNumber;
-            editedCustomerDetails.Address = customer.Address;
-            editedCustomerDetails.Email = customer.Email;
-            editedCustomerDetails.DateCreated = DateTime.Now.ToShortDateString();
-
-            _db.Add(editedCustomerDetails);
+            _db.Update(customer);
 
             var pageNumber = page ?? 1;
             var customers = _db.GetAllCustomers(pageNumber);
