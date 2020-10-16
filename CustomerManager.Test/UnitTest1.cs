@@ -70,7 +70,6 @@ namespace CustomerManager.Test
             Assert.Equal("9 Park Lane", savedCustomer.Address);
             Assert.Equal("jack@gmail.com", savedCustomer.Email);
             Assert.Equal("01509234567", savedCustomer.PhoneNumber);
-
         }
 
 
@@ -90,9 +89,6 @@ namespace CustomerManager.Test
 
             sut.Delete(customer[0].Id);
             Assert.Empty(sut.GetAllCustomers(1));
-
-            
-
         }
 
         [Fact]
@@ -111,14 +107,10 @@ namespace CustomerManager.Test
             Assert.Equal("Jack", savedCustomer1.FirstName);
             Assert.Equal("Joe", savedCustomer2.FirstName);
             
-
             sut.Delete(customer[0].Id);
             Assert.Single(sut.GetAllCustomers(1));
             
             Assert.Equal("Joe", sut.GetCustomer(2).FirstName);
-            
-          
-
         }
 
         [Fact]
@@ -127,17 +119,30 @@ namespace CustomerManager.Test
             ICustomerRepository sut = GetInMemoryCustomerRepository();
             List<Customer> customer = CustomerInMemoryDb();
 
-
             sut.Add(customer[0]);
             sut.Add(customer[1]);
 
             Assert.Equal(2, sut.GetAllCustomers(1).Count());
 
             Assert.Equal("Joe", sut.GetCustomer(2).FirstName);
-            
-            
         }
 
+        [Fact]
+        public void SQLCustomerRepository_Should_Update_Customer_Details()
+        {
+            ICustomerRepository sut = GetInMemoryCustomerRepository();
+            List<Customer> customer = CustomerInMemoryDb();
+            sut.Add(customer[0]);
+            sut.Add(customer[1]);
+
+            Assert.Equal("9 Park Lane", customer[0].Address);
+            customer[0].Address = "123 Oak Street";
+
+            sut.Update(customer[0]);
+
+            Assert.Equal("123 Oak Street", customer[0].Address);
+
+        }
 
         private ICustomerRepository GetInMemoryCustomerRepository()
         {
