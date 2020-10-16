@@ -21,74 +21,10 @@ namespace CustomerManager.Test
     public class UnitTest1
     {
 
-        [Fact]
-        public void SQLCustomerRepository_Should_Add_Customer()
+        private List<Customer> CustomerInMemoryDb()
         {
-            ICustomerRepository sut = GetInMemoryCustomerRepository();
-            Customer customer = new Customer()
-            {
-                Id = 1,
-                FirstName = "Jack",
-                MiddleName = "Harry",
-                LastName = "Williams",
-                Address = "9 Park Lane",
-                Email = "jack@gmail.com",
-                PhoneNumber = "01509234567",
-                DateCreated = DateTime.Now.ToShortDateString()
-            };
 
-            Customer savedCustomer = sut.Add(customer);
-
-            Assert.Single(sut.GetAllCustomers(1));
-
-            Assert.Equal("Jack", savedCustomer.FirstName);
-            Assert.Equal("jack@gmail.com", savedCustomer.Email);
-
-        }
-
-
-        [Fact]
-        public void SQLCustomerRepository_Should_Delete_Customer()
-        {
-            ICustomerRepository sut = GetInMemoryCustomerRepository();
-
-
-            Customer customer = new Customer()
-            {
-                Id = 1,
-                FirstName = "Jack",
-                MiddleName = "Harry",
-                LastName = "Williams",
-                Address = "9 Park Lane",
-                Email = "jack@gmail.com",
-                PhoneNumber = "01509234567",
-                DateCreated = DateTime.Now.ToShortDateString()
-            };
-
-
-            Customer savedCustomer = sut.Add(customer);
-           
-            Assert.Single(sut.GetAllCustomers(1));
-
-            //Assert.Equal(2, sut.GetAllCustomers(1).Count());
-
-            Assert.Equal("Jack", savedCustomer.FirstName);
-            Assert.Equal("jack@gmail.com", savedCustomer.Email);
-
-
-            sut.Delete(customer.Id);
-            Assert.Empty(sut.GetAllCustomers(1));
-
-            
-
-        }
-
-        [Fact]
-        public void SQLCustomerRepository_Add_Delete_Multiple_Customer_Entries()
-        {
-            ICustomerRepository sut = GetInMemoryCustomerRepository();
-
-            List<Customer> customer = new List<Customer>()
+            List<Customer> customerList = new List<Customer>()
             {
                 new Customer
                 {
@@ -105,9 +41,9 @@ namespace CustomerManager.Test
                 {
                     Id = 2,
                     FirstName = "Joe",
-                    MiddleName = "Bob",
-                    LastName = "Williams",
-                    Address = "9 Park Lane",
+                    MiddleName = "Luke",
+                    LastName = "Riley",
+                    Address = "102 Regent Street",
                     Email = "joe@gmail.com",
                     PhoneNumber = "01509264567",
                     DateCreated = DateTime.Now.ToShortDateString()
@@ -115,24 +51,92 @@ namespace CustomerManager.Test
 
             };
 
+            return customerList;
+        }
+
+        [Fact]
+        public void SQLCustomerRepository_Should_Add_Customer()
+        {
+            ICustomerRepository sut = GetInMemoryCustomerRepository();
+            List<Customer> customer = CustomerInMemoryDb();
+
+            Customer savedCustomer = sut.Add(customer[0]);
+
+            Assert.Single(sut.GetAllCustomers(1));
+
+            Assert.Equal("Jack", savedCustomer.FirstName);
+            Assert.Equal("Harry", savedCustomer.MiddleName);
+            Assert.Equal("Williams", savedCustomer.LastName);
+            Assert.Equal("9 Park Lane", savedCustomer.Address);
+            Assert.Equal("jack@gmail.com", savedCustomer.Email);
+            Assert.Equal("01509234567", savedCustomer.PhoneNumber);
+
+        }
+
+
+        [Fact]
+        public void SQLCustomerRepository_Should_Delete_Customer()
+        {
+            ICustomerRepository sut = GetInMemoryCustomerRepository();
+            List<Customer> customer = CustomerInMemoryDb();
+
+            Customer savedCustomer = sut.Add(customer[0]);
+           
+            Assert.Single(sut.GetAllCustomers(1));
+
+            Assert.Equal("Jack", savedCustomer.FirstName);
+            Assert.Equal("jack@gmail.com", savedCustomer.Email);
+
+
+            sut.Delete(customer[0].Id);
+            Assert.Empty(sut.GetAllCustomers(1));
+
+            
+
+        }
+
+        [Fact]
+        public void SQLCustomerRepository_Add_Delete_From_Multiple_Customer_Entries()
+        {
+            ICustomerRepository sut = GetInMemoryCustomerRepository();
+
+            List <Customer> customer = CustomerInMemoryDb();
 
             Customer savedCustomer1 = sut.Add(customer[0]);
             Customer savedCustomer2 = sut.Add(customer[1]);
 
             Assert.Equal(2, sut.GetAllCustomers(1).Count());
+            
 
             Assert.Equal("Jack", savedCustomer1.FirstName);
             Assert.Equal("Joe", savedCustomer2.FirstName);
             
+
             sut.Delete(customer[0].Id);
-            
             Assert.Single(sut.GetAllCustomers(1));
+            
+            Assert.Equal("Joe", sut.GetCustomer(2).FirstName);
+            
+          
 
         }
 
+        [Fact]
+        public void SQLCustomerRepository_Should_Get_Customer_By_ID()
+        {
+            ICustomerRepository sut = GetInMemoryCustomerRepository();
+            List<Customer> customer = CustomerInMemoryDb();
 
 
+            sut.Add(customer[0]);
+            sut.Add(customer[1]);
 
+            Assert.Equal(2, sut.GetAllCustomers(1).Count());
+
+            Assert.Equal("Joe", sut.GetCustomer(2).FirstName);
+            
+            
+        }
 
 
         private ICustomerRepository GetInMemoryCustomerRepository()
